@@ -13,7 +13,7 @@ type FileList []os.FileInfo
 const slash = string(os.PathSeparator)
 
 func main() {
-	// The only means of input is using command line arguments. 
+	// The only means of input is using command line arguments.
 	// Produce an error if no suitable command line is given.
 	if len(os.Args) < 2 {
 		log.Fatalf("Usage: %s <directory to recurse>\n", os.Args[0])
@@ -36,18 +36,18 @@ func ListDirectory(path string) {
 
 func recurseDirectory(path string, info os.FileInfo, depth int) {
 	// Print the current directory name
-	fmt.Printf("%s[%s]\n", strings.Repeat("\t", depth), info.Name())
+	fmt.Println(strings.Repeat("\t", depth) + "[" + info.Name() + "]")
 
 	// Attempt to list the files in this directory
 	dirFile, err := os.Open(path)
 	if err != nil {
-		log.Printf("Couldn't open directory <%s>\n", path)
+		log.Printf("Couldn't open directory <%s>, %v\n", path, err)
 		return
 	}
 	var list FileList
 	list, err = dirFile.Readdir(0)
 	if err != nil {
-		log.Printf("Couldn't list directory <%s>\n", path)
+		log.Printf("Couldn't list directory <%s>, %v\n", path, err)
 		return
 	}
 	// Sort the list
@@ -58,7 +58,7 @@ func recurseDirectory(path string, info os.FileInfo, depth int) {
 		if file.IsDir() {
 			recurseDirectory(path+slash+file.Name(), file, depth+1)
 		} else {
-			fmt.Printf("%s%s\n", strings.Repeat("\t", depth+1), file.Name())
+			fmt.Println(strings.Repeat("\t", depth+1) + file.Name())
 		}
 	}
 }
